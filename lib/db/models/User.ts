@@ -1,0 +1,125 @@
+import mongoose, { Schema, Document, Model } from "mongoose"
+
+export type UserRole = "freelancer" | "company" | "admin"
+
+export interface IUser extends Document {
+    clerkId: string // Clerk user ID
+    email: string
+    name: string
+    role: UserRole
+    onboardingCompleted: boolean
+
+    // Freelancer-specific fields
+    skills?: string[]
+    bio?: string
+    portfolio?: string
+    resume?: string
+    hourlyRate?: number
+    availability?: "full-time" | "part-time" | "contract"
+    socialLinks?: {
+        github?: string
+        linkedin?: string
+        twitter?: string
+        website?: string
+    }
+    image?: string
+    profileViews?: number
+
+    // Company-specific fields
+    companyName?: string
+    industry?: string
+    companySize?: string
+    website?: string
+    description?: string
+    logo?: string
+    location?: string
+
+    // Admin fields
+    isBanned: boolean
+    isVerified: boolean
+
+    createdAt: Date
+    updatedAt: Date
+}
+
+const userSchema = new Schema<IUser>(
+    {
+        clerkId: {
+            type: String,
+            required: true,
+            unique: true,
+            index: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        role: {
+            type: String,
+            enum: ["freelancer", "company", "admin"],
+            required: true,
+        },
+        onboardingCompleted: {
+            type: Boolean,
+            default: false,
+        },
+        isBanned: {
+            type: Boolean,
+            default: false,
+        },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+
+        // Freelancer fields
+        skills: [String],
+        bio: String,
+        portfolio: String,
+        resume: String,
+        hourlyRate: Number,
+        availability: {
+            type: String,
+            enum: ["full-time", "part-time", "contract"],
+        },
+        socialLinks: {
+            github: String,
+            linkedin: String,
+            twitter: String,
+            website: String,
+        },
+        image: String,
+        profileViews: {
+            type: Number,
+            default: 0,
+        },
+
+        // Company fields
+        companyName: String,
+        industry: String,
+        companySize: String,
+        website: String,
+        description: String,
+        logo: String,
+        location: String,
+    },
+    {
+        timestamps: true,
+    }
+)
+
+// Indexes for faster queries
+userSchema.index({ role: 1 })
+userSchema.index({ onboardingCompleted: 1 })
+userSchema.index({ isBanned: 1 })
+userSchema.index({ isVerified: 1 })
+
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema)
+
+export default User

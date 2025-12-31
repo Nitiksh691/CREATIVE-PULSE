@@ -1,0 +1,311 @@
+{
+  "dashboardStats": [
+    {
+      "label": "MATCHING JOBS",
+      "value": "24",
+      "description": "NEW OPPORTUNITIES THIS WEEK",
+      "intent": "positive",
+      "icon": "briefcase",
+      "direction": "up"
+    },
+    {
+      "label": "APPLICATIONS SENT",
+      "value": "12",
+      "description": "AWAITING COMPANY RESPONSE",
+      "intent": "neutral",
+      "icon": "filetext"
+    },
+    {
+      "label": "PROFILE VIEWS",
+      "value": "89",
+      "description": "COMPANIES VIEWED YOUR PROFILE",
+      "intent": "positive",
+      "icon": "sparkles",
+      "tag": "3 weeks 🔥"
+    }
+  ],
+  "chartData": {
+    "week": [
+      {
+        "date": "06/07",
+        "sales": 50000,
+        "spendings": 30000,
+        "coffee": 10000
+      },
+      {
+        "date": "07/07",
+        "sales": 250000,
+        "spendings": 15000,
+        "coffee": 30000
+      },
+      {
+        "date": "08/07",
+        "sales": 200000,
+        "spendings": 50000,
+        "coffee": 25000
+      },
+      {
+        "date": "09/07",
+        "sales": 280000,
+        "spendings": 60000,
+        "coffee": 45000
+      },
+      {
+        "date": "10/07",
+        "sales": 120000,
+        "spendings": 20000,
+        "coffee": 15000
+      },
+      {
+        "date": "11/07",
+        "sales": 180000,
+        "spendings": 55000,
+        "coffee": 20000
+      },
+      {
+        "date": "12/07",
+        "sales": 500000,
+        "spendings": 35000,
+        "coffee": 20000
+      },
+      {
+        "date": "13/07",
+        "sales": 130000,
+        "spendings": 60000,
+        "coffee": 10000
+      }
+    ],
+    "month": [
+      { "date": "Jan", "spendings": 45000, "sales": 180000, "coffee": 25000 },
+      { "date": "Feb", "spendings": 30000, "sales": 120000, "coffee": 20000 },
+      { "date": "Mar", "spendings": 65000, "sales": 280000, "coffee": 35000 },
+      { "date": "Apr", "spendings": 25000, "sales": 160000, "coffee": 18000 },
+      { "date": "May", "spendings": 80000, "sales": 350000, "coffee": 45000 },
+      { "date": "Jun", "spendings": 40000, "sales": 90000, "coffee": 25000 },
+      { "date": "Jul", "spendings": 70000, "sales": 220000, "coffee": 40000 },
+      { "date": "Aug", "spendings": 55000, "sales": 170000, "coffee": 30000 },
+      { "date": "Sep", "spendings": 60000, "sales": 200000, "coffee": 35000 },
+      { "date": "Oct", "spendings": 35000, "sales": 140000, "coffee": 22000 },
+      { "date": "Nov", "spendings": 75000, "sales": 340000, "coffee": 38000 },
+      { "date": "Dec", "spendings": 90000, "sales": 420000, "coffee": 50000 }
+    ],
+    "year": [
+      {
+        "date": "2020",
+        "spendings": 280000,
+        "sales": 580000,
+        "coffee": 150000
+      },
+      {
+        "date": "2021",
+        "spendings": 320000,
+        "sales": 650000,
+        "coffee": 180000
+      },
+      {
+        "date": "2022",
+        "spendings": 450000,
+        "sales": 950000,
+        "coffee": 250000
+      },
+      {
+        "date": "2023",
+        "spendings": 200000,
+        "sales": 520000,
+        "coffee": 120000
+      },
+      { "date": "2024", "spendings": 380000, "sales": 820000, "coffee": 200000 }
+    ]
+  },
+  "rebelsRanking": [
+    {
+      "id": 1,
+      "name": "KRIMSON",
+      "handle": "@KRIMSON",
+      "streak": "2 WEEKS STREAK 🔥",
+      "points": 148,
+      "avatar": "/avatars/user_krimson.png",
+      "featured": true,
+      "subtitle": "2 WEEKS STREAK 🔥"
+    },
+    {
+      "id": 2,
+      "name": "MATI",
+      "handle": "@MATI",
+      "streak": "",
+      "points": 129,
+      "avatar": "/avatars/user_mati.png"
+    },
+    {
+      "id": 3,
+      "name": "PEK",
+      "handle": "@MATT",
+      "streak": "",
+      "points": 108,
+      "avatar": "/avatars/user_pek.png"
+    },
+    {
+      "id": 4,
+      "name": "JOYBOY",
+      "handle": "@JOYBOY",
+      "streak": "",
+      "points": 64,
+      "avatar": "/avatars/user_joyboy.png"
+    }
+  ],
+  "securityStatus": [
+    {
+      "title": "GUARD BOTS",
+      "value": "124/124",
+      "status": "[RUNNING...]",
+      "variant": "success"
+    },
+    {
+      "title": "FIREWALL",
+      "value": "99.9%",
+      "status": "[BLOCKED]",
+      "variant": "success"
+    },
+    {
+      "title": "HTML WARNINGS",
+      "value": "12042",
+      "status": "[ACCESSIBILITY]",
+      "variant": "warning"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "title": "NEW JOB MATCH",
+      "message": "Senior Frontend Developer at TechCorp matches your skills and preferences.",
+      "timestamp": "2024-07-10T13:39:00Z",
+      "type": "success",
+      "read": false,
+      "priority": "medium"
+    },
+    {
+      "id": "notif-2",
+      "title": "APPLICATION UPDATE",
+      "message": "Your application for UI Designer at Innovate Studio is under review.",
+      "timestamp": "2024-07-10T13:35:00Z",
+      "type": "info",
+      "read": false,
+      "priority": "low"
+    },
+    {
+      "id": "notif-3",
+      "title": "MESSAGE FROM COMPANY",
+      "message": "Rampant Studio has sent you a message regarding your application.",
+      "timestamp": "2024-07-10T12:15:00Z",
+      "type": "info",
+      "read": true,
+      "priority": "medium"
+    },
+    {
+      "id": "notif-4",
+      "title": "INTERVIEW SCHEDULED",
+      "message": "Interview confirmed for Full Stack Engineer position at Joyco Studio.",
+      "timestamp": "2024-07-10T11:45:00Z",
+      "type": "success",
+      "read": true,
+      "priority": "high"
+    }
+  ],
+  "widgetData": {
+    "location": "Buenos Aires, Argentina",
+    "timezone": "UTC-3",
+    "temperature": "18°C",
+    "weather": "Partly Cloudy",
+    "date": "Wednesday, July 10th, 2025"
+  },
+  "jobs": [
+    {
+      "id": "job-1",
+      "title": "Lead Backend Engineer",
+      "company": "TechRebel",
+      "location": "Neo-Tokyo / Remote",
+      "type": "Full-time",
+      "salary": "$180k - $240k",
+      "description": "Building the next generation of decentralized infrastructure for the rebellion.",
+      "skills": ["Rust", "Distributed Systems", "P2P"],
+      "logo": "/placeholder.svg?height=40&width=40"
+    },
+    {
+      "id": "job-2",
+      "title": "Frontend Mercenary",
+      "company": "InnovateCorp",
+      "location": "Remote",
+      "type": "Freelance",
+      "salary": "$120/hr",
+      "description": "High-fidelity UI implementation for a top-secret AI interface project.",
+      "skills": ["React", "Three.js", "Tailwind"],
+      "logo": "/placeholder.svg?height=40&width=40"
+    },
+    {
+      "id": "job-3",
+      "title": "UI/UX Cyber-Designer",
+      "company": "Joyco Studio",
+      "location": "Buenos Aires",
+      "type": "Full-time",
+      "salary": "$90k - $130k",
+      "description": "Designing interfaces that feel like they're from 2077.",
+      "skills": ["Figma", "Motion", "Web3"],
+      "logo": "/placeholder.svg?height=40&width=40"
+    }
+  ],
+  "companies": [
+    {
+      "id": "co-1",
+      "name": "TechRebel",
+      "description": "The underground leader in decentralized tech.",
+      "industry": "Infrastructure",
+      "size": "50-100",
+      "location": "Neo-Tokyo",
+      "logo": "/placeholder.svg?height=60&width=60"
+    },
+    {
+      "id": "co-2",
+      "name": "InnovateCorp",
+      "description": "Pushing the boundaries of AI and human interaction.",
+      "industry": "AI / Robotics",
+      "size": "500+",
+      "location": "Silicon Valley",
+      "logo": "/placeholder.svg?height=60&width=60"
+    }
+  ],
+  "creatorPosts": [
+    {
+      "id": "post-1",
+      "name": "Krimson",
+      "role": "Full Stack Revolutionary",
+      "avatar": "/avatars/user_krimson.png",
+      "content": "Just finished a major security overhaul for a decentralized exchange. Looking for my next high-stakes mission in the AI or Infrastructure space. I don't just write code, I build digital fortresses.",
+      "skills": ["Rust", "Solidity", "Next.js"],
+      "likes": 124,
+      "bookmarks": 42,
+      "timestamp": "2h ago"
+    },
+    {
+      "id": "post-2",
+      "name": "Mati",
+      "role": "Interface Mercenary",
+      "avatar": "/avatars/user_mati.png",
+      "content": "Crafting high-fidelity, cyberpunk-inspired UI/UX. Currently available for short-term contracts. Check out my latest experiment: a neural-linked dashboard concept.",
+      "skills": ["Figma", "Three.js", "React"],
+      "likes": 89,
+      "bookmarks": 12,
+      "timestamp": "5h ago"
+    },
+    {
+      "id": "post-3",
+      "name": "Joyboy",
+      "role": "Backend Architect",
+      "avatar": "/avatars/user_joyboy.png",
+      "content": "Scale is my middle name. I've optimized databases to handle millions of requests per second. If you have a scaling problem, I have the solution.",
+      "skills": ["Go", "Kubernetes", "PostgreSQL"],
+      "likes": 56,
+      "bookmarks": 18,
+      "timestamp": "1d ago"
+    }
+  ]
+}
