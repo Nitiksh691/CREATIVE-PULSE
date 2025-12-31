@@ -6,6 +6,7 @@ import { V0Provider } from "@/lib/v0-context"
 import localFont from "next/font/local"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Toaster } from "sonner"
+import { SidebarProvider } from "@/components/ui/sidebar" // Add this import
 
 const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
@@ -41,8 +42,11 @@ export default function RootLayout({
           <link rel="preload" href="/fonts/Rebels-Fett.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         </head>
         <body className={`${rebelGrotesk.variable} ${robotoMono.variable} antialiased bg-background text-foreground`}>
-          <V0Provider isV0={isV0}>{children}</V0Provider>
-          <Toaster position="top-right" richColors />
+          {/* Wrap everything in SidebarProvider */}
+          <SidebarProvider>
+            <V0Provider isV0={isV0}>{children}</V0Provider>
+            <Toaster position="top-right" richColors />
+          </SidebarProvider>
         </body>
       </html>
     </ClerkProvider>
