@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { notFound, useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -35,7 +35,7 @@ interface Job {
   }
   companyName?: string // Fallback
   location: string
-  salary: {
+  budget?: {
     min: number
     max: number
     currency: string
@@ -46,10 +46,12 @@ interface Job {
   createdAt: string
 }
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [job, setJob] = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
   const [applying, setApplying] = useState(false)
+  const [hasApplied, setHasApplied] = useState(false) // New state
   const [coverLetter, setCoverLetter] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const { user } = useUser()
@@ -58,11 +60,25 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`/api/jobs/${params.id}`)
+        const res = await fetch(`/api/jobs/${id}`)
         if (res.status === 404) notFound()
         if (!res.ok) throw new Error("Failed to fetch job")
         const data = await res.json()
         setJob(data.job)
+
+        // Check if user has already applied (if logged in)
+        // Ideally we have an endpoint /api/applications/check?jobId=... or we fetch all my apps
+        // For now, let's assume we can fetch user's applications
+        const appsRes = await fetch("/api/applications/my")
+        if (appsRes.ok) {
+          const appsData = await appsRes.json()
+          // appsData.applications is array of { job: { _id: ... } } or similar
+          // We need to check if any app corresponds to this job ID
+          const myApps = appsData.applications || []
+          const alreadyApplied = myApps.some((app: any) => app.job === id || app.job?._id === id)
+          setHasApplied(alreadyApplied)
+        }
+
       } catch (error) {
         console.error("Error fetching job:", error)
         toast.error("Failed to load mission details")
@@ -71,7 +87,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
       }
     }
     fetchJob()
-  }, [params.id])
+  }, [id])
 
   const handleApply = async () => {
     if (!user) {
@@ -102,7 +118,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
 
       toast.success("Application submitted successfully!")
       setDialogOpen(false)
-      router.push("/dashboard")
+      setHasApplied(true) // Update state immediately
+      // router.push("/dashboard") // Optional: Stay on page to see "Applied" status
     } catch (error: any) {
       console.error("Apply error:", error)
       toast.error(error.message || "Failed to apply")
@@ -126,6 +143,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   // Resolve company name and logo
   const companyName = job.company?.companyName || job.company?.name || job.companyName || "Unknown Company"
   const companyLogo = job.company?.logo
+  const companyId = job.company?._id || (job.company as any)?.id // Handle potential ID variations
+  const [imgError, setImgError] = useState(false)
 
   return (
     <DashboardPageLayout
@@ -140,16 +159,27 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <div className="p-8 bg-card border-2 border-white/5 rounded-2xl space-y-6">
             <div className="flex items-center gap-6">
-              <div className="size-20 bg-white/5 rounded-xl flex items-center justify-center p-4">
-                {companyLogo ? (
-                  <Image src={companyLogo} alt={companyName} width={64} height={64} className="object-contain" />
-                ) : (
-                  <div className="text-3xl font-display text-primary">{companyName.charAt(0)}</div>
-                )}
-              </div>
+              <Link href={companyId ? `/companies/${companyId}` : "#"} className="shrink-0 group">
+                <div className="size-20 bg-white/5 rounded-xl flex items-center justify-center p-4 border border-white/10 group-hover:border-primary/50 transition-colors">
+                  {companyLogo && !imgError ? (
+                    <Image
+                      src={companyLogo}
+                      alt={companyName}
+                      width={64}
+                      height={64}
+                      className="object-contain"
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <div className="text-3xl font-display text-primary">{companyName.charAt(0)}</div>
+                  )}
+                </div>
+              </Link>
               <div>
                 <h2 className="text-3xl font-display uppercase tracking-tight mb-1">{job.title}</h2>
-                <p className="text-primary font-mono uppercase tracking-widest">{companyName}</p>
+                <Link href={companyId ? `/companies/${companyId}` : "#"}>
+                  <p className="text-primary font-mono uppercase tracking-widest hover:underline">{companyName}</p>
+                </Link>
               </div>
             </div>
 
@@ -160,9 +190,11 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               <div className="bg-accent px-4 py-2 rounded font-mono text-xs uppercase">
                 <span className="opacity-50 mr-2 text-[10px]">Location:</span> {job.location}
               </div>
-              <div className="bg-accent px-4 py-2 rounded font-mono text-xs uppercase">
-                <span className="opacity-50 mr-2 text-[10px]">Salary:</span> {job.salary.currency} {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()}
-              </div>
+              {job.budget && (
+                <div className="bg-accent px-4 py-2 rounded font-mono text-xs uppercase">
+                  <span className="opacity-50 mr-2 text-[10px]">Budget:</span> {job.budget.currency} {job.budget.min.toLocaleString()} - {job.budget.max.toLocaleString()}
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
@@ -190,9 +222,16 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
           <div className="p-6 bg-primary/5 border-2 border-primary/20 rounded-2xl flex flex-col gap-4">
             <h4 className="font-display uppercase tracking-widest text-center">Ready for Action?</h4>
 
+            <h4 className="font-display uppercase tracking-widest text-center">Ready for Action?</h4>
+
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="w-full h-14 font-display uppercase tracking-widest text-lg">Apply Now</Button>
+                <Button
+                  className="w-full h-14 font-display uppercase tracking-widest text-lg"
+                  disabled={hasApplied}
+                >
+                  {hasApplied ? "Already Applied" : "Apply Now"}
+                </Button>
               </DialogTrigger>
               <DialogContent className="border-2 border-white/10 bg-black/90 backdrop-blur-xl">
                 <DialogHeader>

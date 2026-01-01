@@ -5,11 +5,12 @@ import CreatorPost from "@/lib/db/models/CreatorPost"
 import User from "@/lib/db/models/User"
 
 // GET /api/creator-posts/[id] - Get single post
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params
         await connectDB()
 
-        const post = await CreatorPost.findById(params.id)
+        const post = await CreatorPost.findById(id)
             .populate("user", "name skills bio portfolio hourlyRate")
             .populate("comments.user", "name")
 
@@ -18,7 +19,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         }
 
         // Increment views
-        await CreatorPost.findByIdAndUpdate(params.id, { $inc: { views: 1 } })
+        await CreatorPost.findByIdAndUpdate(id, { $inc: { views: 1 } })
 
         return NextResponse.json({ post })
     } catch (error) {
@@ -28,8 +29,9 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 }
 
 // DELETE /api/creator-posts/[id] - Delete post (Creator only)
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params
         const { userId } = await auth()
 
         if (!userId) {
@@ -44,7 +46,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
-        const post = await CreatorPost.findById(params.id)
+        const post = await CreatorPost.findById(id)
 
         if (!post) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 })
@@ -55,7 +57,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
             return NextResponse.json({ error: "You can only delete your own posts" }, { status: 403 })
         }
 
-        await CreatorPost.findByIdAndDelete(params.id)
+        await CreatorPost.findByIdAndDelete(id)
 
         return NextResponse.json({ success: true, message: "Post deleted" })
     } catch (error) {

@@ -93,15 +93,21 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         // Validate required fields
-        const { title, description, skills, salary, location, type, category } = body
+        const { title, description, skills, budget, location, type, category } = body
 
-        if (!title || !description || !skills || !salary || !location || !type || !category) {
+        if (!title || !description || !skills || !location || !type || !category) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
         }
 
         // Create job
         const job = await Job.create({
-            ...body,
+            title,
+            description,
+            skills,
+            budget,
+            location,
+            type,
+            category,
             company: user._id,
             companyName: user.companyName || user.name,
             status: "open",

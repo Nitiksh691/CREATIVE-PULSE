@@ -55,7 +55,7 @@ const jobSchema = new Schema<IJob>(
         },
         salary: {
             type: String,
-            required: true,
+            required: false,
         },
         location: {
             type: String,

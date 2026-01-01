@@ -30,6 +30,8 @@ export default function CreatorDiscoverPage() {
   const [isComposerOpen, setIsComposerOpen] = useState(false)
   const [isPosting, setIsPosting] = useState(false)
   const [selectedPost, setSelectedPost] = useState<any>(null)
+  const [commentText, setCommentText] = useState("")
+  const [isCommenting, setIsCommenting] = useState(false)
 
   const fetchPosts = async () => {
     try {
@@ -78,6 +80,100 @@ export default function CreatorDiscoverPage() {
       toast.error(error.message)
     } finally {
       setIsPosting(false)
+    }
+  }
+
+  const handleLike = async (postId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      const res = await fetch(`/api/creator-posts/${postId}/like`, {
+        method: "POST",
+      })
+
+      if (!res.ok) throw new Error("Failed to like post")
+
+      const data = await res.json()
+
+      // Update posts state
+      setPosts(posts.map(post =>
+        post.id === postId
+          ? { ...post, likes: data.likesCount, isLiked: data.liked }
+          : post
+      ))
+
+      // Update selected post if it's open
+      if (selectedPost?.id === postId) {
+        setSelectedPost({ ...selectedPost, likes: data.likesCount, isLiked: data.liked })
+      }
+
+      toast.success(data.liked ? "Liked!" : "Unliked!")
+    } catch (error) {
+      console.error("Error liking post:", error)
+      toast.error("Failed to like post")
+    }
+  }
+
+  const handleComment = async (postId: string) => {
+    if (!commentText.trim()) return
+
+    setIsCommenting(true)
+    try {
+      const res = await fetch(`/api/creator-posts/${postId}/comment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comment: commentText }),
+      })
+
+      if (!res.ok) throw new Error("Failed to add comment")
+
+      const data = await res.json()
+
+      // Update posts state
+      setPosts(posts.map(post =>
+        post.id === postId
+          ? { ...post, comments: data.commentsCount }
+          : post
+      ))
+
+      // Update selected post
+      if (selectedPost?.id === postId) {
+        setSelectedPost({ ...selectedPost, comments: data.commentsCount })
+      }
+
+      setCommentText("")
+      toast.success("Comment added!")
+    } catch (error) {
+      console.error("Error adding comment:", error)
+      toast.error("Failed to add comment")
+    } finally {
+      setIsCommenting(false)
+    }
+  }
+
+  const handleShare = async (postId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
+
+    const shareUrl = `${window.location.origin}/creator-discover?post=${postId}`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Check out this creator pitch!',
+          url: shareUrl,
+        })
+        toast.success("Shared successfully!")
+      } catch (error) {
+        console.error("Error sharing:", error)
+      }
+    } else {
+      // Fallback to copying to clipboard
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        toast.success("Link copied to clipboard!")
+      } catch (error) {
+        console.error("Error copying to clipboard:", error)
+        toast.error("Failed to copy link")
+      }
     }
   }
 
@@ -201,11 +297,25 @@ export default function CreatorDiscoverPage() {
 
                   <div className="mt-auto pt-3 md:pt-4 flex items-center justify-between border-t border-white/5">
                     <div className="flex items-center gap-3 md:gap-4">
-                      <button className="flex items-center gap-1 md:gap-1.5 text-[10px] font-mono uppercase text-muted-foreground hover:text-primary transition-colors">
-                        <Heart className="size-3.5 md:size-4" /> <span>{post.likes}</span>
+                      <button
+                        onClick={(e) => handleLike(post.id, e)}
+                        className={`flex items-center gap-1 md:gap-1.5 text-[10px] font-mono uppercase transition-colors ${post.isLiked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-primary'
+                          }`}
+                      >
+                        <Heart className={`size-3.5 md:size-4 ${post.isLiked ? 'fill-current' : ''}`} />
+                        <span>{post.likes}</span>
                       </button>
-                      <button className="flex items-center gap-1 md:gap-1.5 text-[10px] font-mono uppercase text-muted-foreground hover:text-primary transition-colors">
-                        <MessageSquare className="size-3.5 md:size-4" /> <span>{post.comments || 0}</span>
+                      <button
+                        className="flex items-center gap-1 md:gap-1.5 text-[10px] font-mono uppercase text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <MessageSquare className="size-3.5 md:size-4" />
+                        <span>{post.comments || 0}</span>
+                      </button>
+                      <button
+                        onClick={(e) => handleShare(post.id, e)}
+                        className="flex items-center gap-1 md:gap-1.5 text-[10px] font-mono uppercase text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Share2 className="size-3.5 md:size-4" />
                       </button>
                     </div>
                     <div className="flex items-center gap-1 md:gap-1.5 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
@@ -274,15 +384,45 @@ export default function CreatorDiscoverPage() {
 
                 <div className="flex items-center justify-between py-4 md:py-6 border-y border-white/10">
                   <div className="flex items-center gap-4 md:gap-6 lg:gap-10">
-                    <button className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-display uppercase tracking-widest text-primary">
-                      <Heart className="size-5 md:size-6" /> {selectedPost.likes} Likes
+                    <button
+                      onClick={(e) => handleLike(selectedPost.id, e)}
+                      className={`flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-display uppercase tracking-widest transition-colors ${selectedPost.isLiked ? 'text-red-500 hover:text-red-600' : 'text-primary hover:text-primary/80'
+                        }`}
+                    >
+                      <Heart className={`size-5 md:size-6 ${selectedPost.isLiked ? 'fill-current' : ''}`} />
+                      {selectedPost.likes} Likes
                     </button>
                     <button className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
                       <MessageSquare className="size-5 md:size-6" /> {selectedPost.comments || 0} Comments
                     </button>
                   </div>
-                  <Button variant="ghost" size="icon" className="hover:bg-white/5">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-white/5"
+                    onClick={(e) => handleShare(selectedPost.id, e)}
+                  >
                     <Share2 className="size-4 md:size-5" />
+                  </Button>
+                </div>
+
+                {/* Comment Section */}
+                <div className="space-y-4">
+                  <h3 className="font-display uppercase tracking-widest text-sm">Add Comment</h3>
+                  <div className="flex gap-2">
+                    <Textarea
+                      placeholder="Share your thoughts..."
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      className="flex-1 min-h-[80px] bg-background border-border/50 font-mono text-sm"
+                    />
+                  </div>
+                  <Button
+                    onClick={() => handleComment(selectedPost.id)}
+                    disabled={isCommenting || !commentText.trim()}
+                    className="w-full font-display uppercase tracking-widest"
+                  >
+                    {isCommenting ? "Posting..." : "Post Comment"}
                   </Button>
                 </div>
               </div>

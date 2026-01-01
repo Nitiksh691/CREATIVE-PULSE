@@ -16,6 +16,12 @@ export interface IApplication extends Document {
     // Status tracking
     status: "pending" | "reviewing" | "shortlisted" | "rejected" | "accepted"
     companyNotes?: string
+    acceptanceDetails?: {
+        email: string
+        phone?: string
+        message?: string
+        acceptedAt: Date
+    }
 
     // Communication
     messages?: {
@@ -69,6 +75,12 @@ const applicationSchema = new Schema<IApplication>(
             index: true,
         },
         companyNotes: String,
+        acceptanceDetails: {
+            email: String,
+            phone: String,
+            message: String,
+            acceptedAt: Date,
+        },
         messages: [
             {
                 sender: {

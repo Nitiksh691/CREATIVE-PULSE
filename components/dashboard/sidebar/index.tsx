@@ -26,6 +26,7 @@ import MonkeyIcon from "@/components/icons/monkey"
 import DotsVerticalIcon from "@/components/icons/dots-vertical"
 import { Bullet } from "@/components/ui/bullet"
 import LockIcon from "@/components/icons/lock"
+import BriefcaseIcon from "@/components/icons/briefcase"
 import Image from "next/image"
 import { useIsV0 } from "@/lib/v0-context"
 import { NAVIGATION_CONFIG } from "@/lib/navigation"
@@ -93,6 +94,19 @@ export function DashboardSidebar({ className, ...props }: React.ComponentProps<t
     return true
   })
 
+  // Add Company Dashboard link if user is a company
+  const finalNavItems = [...filteredNavItems]
+  if (profile?.role === "company" || user?.publicMetadata?.role === "company") {
+    // Check if not already added (in case added to config later)
+    if (!finalNavItems.find(i => i.url === "/company-dashboard")) {
+      finalNavItems.push({
+        title: "Company Dashboard",
+        url: "/company-dashboard",
+        icon: BriefcaseIcon, // Reuse Briefcase or Building icon
+      })
+    }
+  }
+
   return (
     <Sidebar {...props} className={cn("py-6 border-r border-border", className)}>
       <SidebarHeader className="rounded-t-lg flex gap-3 flex-row rounded-b-none border-b border-border/50 pb-4">
@@ -113,7 +127,7 @@ export function DashboardSidebar({ className, ...props }: React.ComponentProps<t
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {filteredNavItems.map((item) => {
+              {finalNavItems.map((item) => {
                 const isActive = pathname === item.url
                 const Icon = item.icon
 
@@ -131,7 +145,7 @@ export function DashboardSidebar({ className, ...props }: React.ComponentProps<t
                       )}
                     >
                       <Link href={item.url} className="flex items-center gap-3 w-full">
-                        <Icon className="size-5" />
+                        {Icon && <Icon className="size-5" />}
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>

@@ -5,8 +5,9 @@ import CreatorPost from "@/lib/db/models/CreatorPost"
 import User from "@/lib/db/models/User"
 
 // POST /api/creator-posts/[id]/comment - Add comment
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params
         const { userId } = await auth()
 
         if (!userId) {
@@ -28,7 +29,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
             return NextResponse.json({ error: "Comment cannot be empty" }, { status: 400 })
         }
 
-        const post = await CreatorPost.findById(params.id)
+        const post = await CreatorPost.findById(id)
 
         if (!post) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 })

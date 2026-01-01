@@ -12,37 +12,65 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json()
-        const { role, ...profileData } = body
+        const { role, email: rawEmail, name, ...profileData } = body
+
+        // Basic validation
+        if (!role || !rawEmail || !name) {
+            return NextResponse.json(
+                { error: "Role, email, and name are required" },
+                { status: 400 }
+            )
+        }
 
         await connectDB()
 
-        // Update user in MongoDB
-        const updatedUser = await User.findOneAndUpdate(
+        // Atomic update or create (upsert) to prevent race conditions
+        const user = await User.findOneAndUpdate(
             { clerkId: userId },
             {
-                role,
-                ...profileData,
-                onboardingCompleted: true,
+                $set: {
+                    email: rawEmail.toLowerCase().trim(),
+                    name: name.trim(),
+                    role: role,
+                    onboardingCompleted: true,
+                    ...profileData,
+                }
             },
-            { new: true, upsert: true }
+            { upsert: true, new: true, setDefaultsOnInsert: true }
         )
 
-        // Update Clerk User Metadata (Server-side)
-        const client = await clerkClient()
-        await client.users.updateUser(userId, {
-            publicMetadata: {
-                onboardingCompleted: true,
-                role,
-            },
-        })
+        console.log("✅ User onboarded in DB:", user._id)
 
-        if (!updatedUser) {
-            return NextResponse.json({ error: "Failed to update user" }, { status: 500 })
+        // Update Clerk metadata to sync onboarding status
+        const client = await clerkClient()
+        try {
+            await client.users.updateUser(userId, {
+                publicMetadata: {
+                    onboardingCompleted: true,
+                    role,
+                },
+            })
+            console.log("✅ Clerk metadata updated")
+        } catch (clerkError) {
+            console.error("Failed to update Clerk metadata:", clerkError)
+            // Continue since DB is updated, but log critical error
         }
 
-        return NextResponse.json({ success: true, user: updatedUser })
-    } catch (error) {
-        console.error("Onboarding API error:", error)
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+        return NextResponse.json({ success: true, user })
+
+    } catch (error: any) {
+        console.error("Onboarding API error:", {
+            message: error.message,
+            name: error.name,
+            code: error.code,
+            errors: error.errors,
+        })
+        return NextResponse.json(
+            {
+                error: "Failed to complete onboarding",
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            },
+            { status: 500 }
+        )
     }
 }

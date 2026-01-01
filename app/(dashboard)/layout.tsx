@@ -28,6 +28,10 @@ export default async function DashboardLayout({
     const dbUser = await User.findOne({ clerkId: userId }).select("onboardingCompleted").lean()
 
     if (!dbUser || !dbUser.onboardingCompleted) {
+      // Double check against Clerk metadata as a fallback in case DB read is slighty delayed/cached
+      // (Though DB should be source of truth)
+      // If DB is missing user but Clerk says they are logged in, we DEFINITELY need onboarding.
+      console.log(`[DashboardLayout] Redirecting ${userId} to onboarding. DB User Found: ${!!dbUser}, Completed: ${dbUser?.onboardingCompleted}`)
       redirect("/onboarding")
     }
   }

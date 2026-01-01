@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose"
 export type UserRole = "freelancer" | "company" | "admin"
 
 export interface IUser extends Document {
-    clerkId: string // Clerk user ID
+    clerkId: string
     email: string
     name: string
     role: UserRole
@@ -46,19 +46,21 @@ const userSchema = new Schema<IUser>(
     {
         clerkId: {
             type: String,
-            required: true,
+            required: [true, "Clerk ID is required"],
             unique: true,
             index: true,
         },
         email: {
             type: String,
-            required: true,
             unique: true,
+            sparse: true,
             lowercase: true,
+            trim: true,
+            required: [function () { return this.onboardingCompleted; }, "Email required after onboarding"],
         },
         name: {
             type: String,
-            required: true,
+            required: [function () { return this.onboardingCompleted; }, "Name required after onboarding"],
         },
         role: {
             type: String,

@@ -26,8 +26,14 @@ const requiresOnboarding = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
     const { userId, sessionClaims } = await auth()
 
-    // 1. If user is logged in, check for redirects related to onboarding status
+    // 1. If user is logged in, check for rediects
     if (userId && !req.nextUrl.pathname.startsWith("/api")) {
+        // Redirect authenticated users from landing page to jobs
+        if (req.nextUrl.pathname === "/") {
+            const jobsUrl = new URL("/jobs", req.url)
+            return NextResponse.redirect(jobsUrl)
+        }
+
         // Check public_metadata for onboarding status (set by backend)
         const metadata = sessionClaims?.public_metadata as { onboardingCompleted?: boolean } | undefined
         const onboardingCompleted = metadata?.onboardingCompleted
@@ -39,10 +45,15 @@ export default clerkMiddleware(async (auth, req) => {
         // strict server-side checks using await currentUser().
 
         // Check if user is trying to access onboarding page but already completed it
+        // Check if user is trying to access onboarding page but already completed it
+        // DISABLED loop fix: If DB says they aren't onboarded but Clerk says they are,
+        // we need to let them access onboarding to fix it.
+        /*
         if (onboardingCompleted && req.nextUrl.pathname === "/onboarding") {
             const dashboardUrl = new URL("/dashboard", req.url)
             return NextResponse.redirect(dashboardUrl)
         }
+        */
     }
 
     // 2. Public route check (only for non-logged in users)

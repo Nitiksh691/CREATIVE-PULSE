@@ -4,13 +4,12 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useUser } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Briefcase, Building, Shield, ArrowRight, AlertCircle, Check, Loader2 } from "lucide-react"
+import { Briefcase, Building, ArrowRight, Check, Loader2, Mail, User } from "lucide-react"
 import { toast } from "sonner"
 import FileUpload from "@/components/ui/file-upload"
 import { motion, AnimatePresence } from "framer-motion"
@@ -24,13 +23,21 @@ export default function OnboardingPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Check if already onboarded
+  // Shared form state (email, name required by API)
+  const [sharedData, setSharedData] = useState({
+    email: user?.primaryEmailAddress?.emailAddress || "",
+    name: user?.fullName || "",
+  })
+
   useEffect(() => {
-    if (isLoaded && user?.unsafeMetadata?.onboardingCompleted) {
-      toast.info("You've already completed onboarding")
-      router.push("/dashboard")
+    if (isLoaded && user) {
+      setSharedData((prev) => ({
+        ...prev,
+        email: user.primaryEmailAddress?.emailAddress || prev.email,
+        name: user.fullName || prev.name,
+      }))
     }
-  }, [isLoaded, user, router])
+  }, [isLoaded, user])
 
   // Freelancer form state
   const [freelancerData, setFreelancerData] = useState({
@@ -39,7 +46,7 @@ export default function OnboardingPage() {
     portfolio: "",
     resume: "",
     hourlyRate: "",
-    availability: "full-time",
+    availability: "full-time" as const,
   })
   const [skillInput, setSkillInput] = useState("")
 
@@ -52,6 +59,17 @@ export default function OnboardingPage() {
     description: "",
     logo: "",
   })
+
+  // Check if already onboarded
+  // Check if already onboarded - REMOVED TO PREVENT LOOPS
+  // If the user ends up here, we assume they need to onboard or fix their data.
+  // We can show a toast but we shouldn't force redirect if the server sent them here.
+  useEffect(() => {
+    if (isLoaded && user?.unsafeMetadata?.onboardingCompleted) {
+      toast.info("Update your profile details below")
+      // router.push("/dashboard") // Disabled to fix loop
+    }
+  }, [isLoaded, user])
 
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role)
@@ -80,21 +98,27 @@ export default function OnboardingPage() {
     setLoading(true)
 
     try {
-      const payload =
-        selectedRole === "freelancer"
-          ? {
-            role: selectedRole,
-            ...freelancerData,
-            hourlyRate: Number.parseFloat(freelancerData.hourlyRate) || 0,
-          }
-          : selectedRole === "company"
-            ? {
-              role: selectedRole,
-              ...companyData,
-            }
-            : {
-              role: selectedRole,
-            }
+      // Validate required fields
+      if (!sharedData.email || !sharedData.name || !selectedRole) {
+        toast.error("Please fill email, name, and select a role")
+        setLoading(false)
+        return
+      }
+
+      const payload = {
+        role: selectedRole,
+        email: sharedData.email,
+        name: sharedData.name,
+        ...(selectedRole === "freelancer" && {
+          ...freelancerData,
+          hourlyRate: Number.parseFloat(freelancerData.hourlyRate) || 0,
+        }),
+        ...(selectedRole === "company" && {
+          ...companyData,
+        }),
+      }
+
+      console.log("Sending payload:", payload)
 
       const response = await fetch("/api/user/onboarding", {
         method: "POST",
@@ -104,16 +128,17 @@ export default function OnboardingPage() {
         body: JSON.stringify(payload),
       })
 
+      const result = await response.json()
+
       if (!response.ok) {
+        console.error("API Error:", result)
+        toast.error(result.error || "Failed to complete onboarding")
         throw new Error("Failed to complete onboarding")
       }
 
-      // Reload user session to get updated claims from server
       await user?.reload()
-
       toast.success("Onboarding completed!")
 
-      // Redirect based on role
       if (selectedRole === "company") {
         router.push("/company-dashboard")
       } else {
@@ -296,6 +321,30 @@ export default function OnboardingPage() {
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Basic Info Section */}
+                    <div className="space-y-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                      <h3 className="text-sm font-display uppercase tracking-wider text-primary">Identity Validation</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="font-mono uppercase text-xs tracking-wider text-primary">Full Name</Label>
+                          <Input
+                            value={sharedData.name}
+                            onChange={(e) => setSharedData({ ...sharedData, name: e.target.value })}
+                            placeholder="John Doe"
+                            className="bg-black/20 border-white/10 focus:border-primary/50 font-mono text-sm h-10"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="font-mono uppercase text-xs tracking-wider text-primary">Email (Verified)</Label>
+                          <Input
+                            value={sharedData.email}
+                            disabled
+                            className="bg-black/20 border-white/10 font-mono text-sm h-10 text-muted-foreground cursor-not-allowed"
+                          />
+                        </div>
+                      </div>
+                    </div>
                     {selectedRole === "freelancer" && (
                       <div className="space-y-6">
                         <div className="space-y-2">
