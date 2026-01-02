@@ -23,10 +23,10 @@ const isV0 = process.env["VERCEL_URL"]?.includes("vusercontent.net") ?? false
 
 export const metadata: Metadata = {
   title: {
-    template: "%s – M.O.N.K.Y OS",
-    default: "M.O.N.K.Y OS",
+    template: "%s – CREATIVE PULSE",
+    default: "CREATIVE PULSE",
   },
-  description: "The ultimate OS for rebels. Making the web for brave individuals.",
+  description: "The pulse for creative talent. Find missions, build your profile, and join the network of innovators.",
   generator: 'v0.app'
 }
 

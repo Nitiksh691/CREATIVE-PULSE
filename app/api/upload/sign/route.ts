@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         const signature = cloudinary.utils.api_sign_request(
             {
                 timestamp,
-                folder: folder || "monky-os",
+                folder: folder || "creative-pulse",
             },
             process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET!
         )

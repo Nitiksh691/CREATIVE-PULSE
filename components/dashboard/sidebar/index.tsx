@@ -22,7 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils"
 import GearIcon from "@/components/icons/gear"
 import UserIcon from "@/components/icons/user"
-import MonkeyIcon from "@/components/icons/monkey"
+import PulseIcon from "@/components/icons/pulse"
 import DotsVerticalIcon from "@/components/icons/dots-vertical"
 import { Bullet } from "@/components/ui/bullet"
 import LockIcon from "@/components/icons/lock"
@@ -103,6 +103,7 @@ export function DashboardSidebar({ className, ...props }: React.ComponentProps<t
         title: "Company Dashboard",
         url: "/company-dashboard",
         icon: BriefcaseIcon, // Reuse Briefcase or Building icon
+        mobile: true,
       })
     }
   }
@@ -111,11 +112,11 @@ export function DashboardSidebar({ className, ...props }: React.ComponentProps<t
     <Sidebar {...props} className={cn("py-6 border-r border-border", className)}>
       <SidebarHeader className="rounded-t-lg flex gap-3 flex-row rounded-b-none border-b border-border/50 pb-4">
         <div className="flex overflow-clip size-12 shrink-0 items-center justify-center rounded bg-primary transition-colors text-primary-foreground">
-          <MonkeyIcon className="size-10 origin-top-left transition-transform" />
+          <PulseIcon className="size-10 origin-top-left transition-transform" />
         </div>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="text-2xl font-display">M.O.N.K.Y.</span>
-          <span className="text-xs uppercase">The OS for Rebels</span>
+          <span className="text-2xl font-display">CREATIVE PULSE</span>
+          <span className="text-xs uppercase">The Pulse of Content</span>
         </div>
       </SidebarHeader>
 

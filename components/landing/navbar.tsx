@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import MonkeyIcon from "@/components/icons/monkey"
+import PulseIcon from "@/components/icons/pulse"
 import { Button } from "@/components/ui/button"
 import { useUser } from "@clerk/nextjs"
 
@@ -10,8 +10,8 @@ export function LandingNavbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-background/80 backdrop-blur-xl border-b border-white/10">
       <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <MonkeyIcon className="size-7 md:size-8 text-primary" />
-        <span className="text-base md:text-lg lg:text-xl font-display uppercase tracking-wider">M.O.N.K.Y</span>
+        <PulseIcon className="size-7 md:size-8 text-primary" />
+        <span className="text-base md:text-lg lg:text-xl font-display uppercase tracking-wider">CREATIVE PULSE</span>
       </Link>
 
       {!isSignedIn && (

@@ -167,9 +167,8 @@
 
   body {
     @apply bg-background text-foreground font-mono;
-    background-image:
-      radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--primary) 30%, transparent) 0%, transparent 60%),
-      radial-gradient(circle at 85% 90%, color-mix(in srgb, var(--primary) 15%, transparent) 0%, transparent 50%);
+    /* Removed radial gradients to ensure true pitch black background as requested */
+    background-image: none;
     background-attachment: fixed;
   }
 }

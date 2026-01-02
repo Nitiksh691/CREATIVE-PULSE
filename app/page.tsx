@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import BriefcaseIcon from "@/components/icons/briefcase"
 import SparklesIcon from "@/components/icons/sparkles"
-import MonkeyIcon from "@/components/icons/monkey"
+import PulseIcon from "@/components/icons/pulse"
 import { ArrowRight, CheckCircle2, Zap, Users, TrendingUp, Shield } from "lucide-react"
 
 import { useUser } from "@clerk/nextjs"
@@ -51,11 +51,16 @@ export default function LandingPage() {
   }, [isLoaded, isSignedIn, router])
 
   return (
-    <div className="min-h-screen bg-[#050505] selection:bg-primary/30 relative overflow-hidden" ref={heroRef}>
+    <div className="min-h-screen selection:bg-primary/30 relative overflow-hidden" ref={heroRef}>
 
 
       {/* Additional ambient glow to brighten the page */}
-      <div className="fixed inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-purple-500/10 pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/5 pointer-events-none" />
+
+      {/* Top Lamp/Spotlight Effect */}
+      {/* Top Lamp/Spotlight Effect - INTENSIFIED */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-white/20 blur-[120px] pointer-events-none -z-10 rounded-full" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[150px] bg-white/40 blur-[80px] pointer-events-none -z-10 rounded-full mix-blend-overlay" />
 
       <LandingNavbar />
 
@@ -66,10 +71,14 @@ export default function LandingPage() {
         {/* Accent line */}
         <div className="absolute top-28 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
+        {/* Hero Spotlight */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[1000px] h-[400px] md:h-[600px] bg-white/5 blur-[100px] md:blur-[130px] rounded-full pointer-events-none -z-10" />
+
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ amount: 0.3, once: false }}
             transition={{ duration: 0.6 }}
             className="text-center max-w-5xl mx-auto"
           >
@@ -81,14 +90,14 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-display uppercase leading-[0.85] mb-6 md:mb-8 tracking-tighter">
-              <span className="hero-text block">Mission <span className="text-primary">Oriented</span></span>
-              <span className="hero-text block">Network for</span>
-              <span className="hero-text block"><span className="text-primary">Kinetic</span> Yields</span>
+              <span className="hero-text block">The <span className="text-primary">Creative</span></span>
+              <span className="hero-text block">Pulse of the</span>
+              <span className="hero-text block"><span className="text-primary">Digital</span> Age</span>
             </h1>
 
             <p className="hero-text text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 md:mb-12 leading-relaxed font-mono">
               Connect with revolutionary tech companies. Find high-stakes roles, internships, and freelance missions
-              that shape the future. Join the rebellion.
+              that shape the future. Join the community.
             </p>
 
             <div className="hero-text flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
@@ -98,7 +107,7 @@ export default function LandingPage() {
                 asChild
               >
                 <Link href="/auth/register" className="flex items-center gap-2">
-                  Join the Rebellion
+                  Join the Community
                   <ArrowRight className="size-4 md:size-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
@@ -108,28 +117,22 @@ export default function LandingPage() {
                 className="h-12 md:h-14 lg:h-16 px-8 md:px-10 lg:px-14 text-sm md:text-base lg:text-lg font-display uppercase tracking-widest border-2 bg-transparent hover:bg-white/5 w-full sm:w-auto"
                 asChild
               >
-                <Link href="/jobs">Register to Browse the Jobs</Link>
+                <Link href="/jobs">Browse the Jobs</Link>
               </Button>
             </div>
 
             {/* Stats Bar */}
-            <div className="mt-16 md:mt-24 grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto py-8 md:py-10 border-y border-white/10">
+            <div className="mt-16 md:mt-24 grid grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto py-8 md:py-10 border-y border-white/10">
               <div>
                 <div className="text-2xl md:text-3xl lg:text-4xl font-display text-primary mb-1 md:mb-2">10K+</div>
                 <div className="text-xs md:text-sm font-mono uppercase tracking-wider text-muted-foreground">
-                  Active Rebels
+                  Students Joined in 1 Month
                 </div>
               </div>
               <div>
-                <div className="text-2xl md:text-3xl lg:text-4xl font-display text-primary mb-1 md:mb-2">500+</div>
+                <div className="text-2xl md:text-3xl lg:text-4xl font-display text-primary mb-1 md:mb-2">50+</div>
                 <div className="text-xs md:text-sm font-mono uppercase tracking-wider text-muted-foreground">
-                  Companies
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl lg:text-4xl font-display text-primary mb-1 md:mb-2">2.4K</div>
-                <div className="text-xs md:text-sm font-mono uppercase tracking-wider text-muted-foreground">
-                  Missions Live
+                  Companies Connected
                 </div>
               </div>
             </div>
@@ -144,7 +147,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ amount: 0.3, once: false }}
             className="text-center mb-12 md:mb-20"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 md:mb-8 border border-primary/30 bg-primary/5 backdrop-blur-sm">
@@ -199,7 +202,7 @@ export default function LandingPage() {
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ amount: 0.2, once: false }}
                 transition={{ delay: i * 0.1 }}
                 className="group p-6 md:p-8 border border-white/10 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-card/70 transition-all"
               >
@@ -223,7 +226,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ amount: 0.3, once: false }}
             className="text-center mb-12 md:mb-20"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 md:mb-8 border border-primary/30 bg-primary/5 backdrop-blur-sm">
@@ -266,7 +269,7 @@ export default function LandingPage() {
                 key={i}
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ amount: 0.3, once: false }}
                 transition={{ delay: i * 0.15 }}
                 className="flex flex-col md:flex-row gap-6 md:gap-8 group"
               >
@@ -295,7 +298,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ amount: 0.3, once: false }}
             className="text-center mb-12 md:mb-20"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 md:mb-8 border border-primary/30 bg-primary/5 backdrop-blur-sm">
@@ -321,16 +324,16 @@ export default function LandingPage() {
                 skills: ["React", "Node.js", "PostgreSQL"],
               },
               {
-                name: "Maya Rodriguez",
-                role: "AI/ML Specialist",
+                name: "Sarah Jenkins",
+                role: "Video Editor",
                 avatar: "/avatars/user_pek.png",
-                skills: ["Python", "TensorFlow", "PyTorch"],
+                skills: ["Premiere Pro", "After Effects", "DaVinci"],
               },
               {
-                name: "Jordan Kim",
-                role: "DevOps Architect",
+                name: "Marcus Thorne",
+                role: "Script Writer",
                 avatar: "/avatars/user_joyboy.png",
-                skills: ["AWS", "Kubernetes", "Terraform"],
+                skills: ["Storytelling", "Screenplay", "Copywriting"],
               },
               {
                 name: "Sam Taylor",
@@ -350,44 +353,46 @@ export default function LandingPage() {
                 avatar: "/avatars/user_pek.png",
                 skills: ["Figma", "Prototyping", "UX Research"],
               },
-            ].map((creator, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group p-5 md:p-6 border border-white/10 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-card/70 transition-all"
-              >
-                <div className="flex items-center gap-3 md:gap-4 mb-4">
-                  <div className="size-12 md:size-14 shrink-0 border-2 border-primary/30 overflow-hidden group-hover:border-primary/50 transition-all">
-                    <Image
-                      src={creator.avatar || "/placeholder.svg"}
-                      alt={creator.name}
-                      width={56}
-                      height={56}
-                      className="object-cover w-full h-full"
-                    />
+            ].map((creator, i) => {
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ amount: 0.2, once: false }}
+                  transition={{ delay: i * 0.1 }}
+                  className="group p-5 md:p-6 border border-white/10 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-card/70 transition-all"
+                >
+                  <div className="flex items-center gap-3 md:gap-4 mb-4">
+                    <div className="size-12 md:size-14 shrink-0 border-2 border-primary/30 overflow-hidden group-hover:border-primary/50 transition-all">
+                      <Image
+                        src={creator.avatar || "/placeholder.svg"}
+                        alt={creator.name}
+                        width={56}
+                        height={56}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-display uppercase tracking-wider text-sm md:text-base truncate">
+                        {creator.name}
+                      </h3>
+                      <p className="text-xs md:text-sm text-muted-foreground font-mono truncate">{creator.role}</p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-display uppercase tracking-wider text-sm md:text-base truncate">
-                      {creator.name}
-                    </h3>
-                    <p className="text-xs md:text-sm text-muted-foreground font-mono truncate">{creator.role}</p>
+                  <div className="flex flex-wrap gap-1.5 md:gap-2">
+                    {creator.skills.map((skill, j) => (
+                      <span
+                        key={j}
+                        className="text-[10px] md:text-xs px-2 md:px-3 py-1 bg-primary/10 border border-primary/30 font-mono uppercase tracking-wider text-primary"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
-                </div>
-                <div className="flex flex-wrap gap-1.5 md:gap-2">
-                  {creator.skills.map((skill, j) => (
-                    <span
-                      key={j}
-                      className="text-[10px] md:text-xs px-2 md:px-3 py-1 bg-primary/10 border border-primary/30 font-mono uppercase tracking-wider text-primary"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -400,7 +405,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            viewport={{ amount: 0.5, once: false }}
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 md:mb-8 border border-primary/30 bg-primary/5 backdrop-blur-sm">
@@ -452,11 +457,11 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4 md:mb-6">
-                <MonkeyIcon className="size-7 md:size-8 text-primary" />
-                <span className="text-lg md:text-xl font-display uppercase tracking-wider">M.O.N.K.Y</span>
+                <PulseIcon className="size-7 md:size-8 text-primary" />
+                <span className="text-lg md:text-xl font-display uppercase tracking-wider">CREATIVE PULSE</span>
               </div>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-mono">
-                The OS for rebels. Connecting talent with innovation.
+                The pulse for creative talent. Connecting innovation with artistry.
               </p>
             </div>
             <div>
@@ -522,7 +527,7 @@ export default function LandingPage() {
           </div>
           <div className="pt-6 md:pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs md:text-sm text-muted-foreground font-mono text-center md:text-left">
-              © 2025 M.O.N.K.Y. All rights reserved.
+              © 2026 CREATIVE PULSE. All rights reserved.
             </p>
             <div className="flex items-center gap-4 md:gap-6">
               <Link
