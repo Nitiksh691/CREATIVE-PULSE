@@ -10,8 +10,6 @@ import { CheckCircle2, Clock, XCircle, MoreHorizontal, FileText, Building2, Send
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Skeleton } from "@/components/ui/skeleton"
-
-import { Skeleton } from "@/components/ui/skeleton"
 import AcceptanceNotice from "@/components/dashboard/acceptance-notice"
 
 export default function ApplicationsPage() {
