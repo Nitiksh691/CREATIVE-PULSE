@@ -41,7 +41,7 @@ export async function GET(req: Request) {
             website: user.website || user.socialLinks?.website || "",
             joinedDate: new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
             skills: user.skills || [],
-            experience: [], // Placeholder as Experience model/schema wasn't requested/visible yet
+            experience: user.experience || [],
             socialLinks: user.socialLinks || {},
             image: user.image,
             resume: user.resume,
@@ -73,7 +73,7 @@ export async function PUT(req: Request) {
         await connectDB()
 
         const body = await req.json()
-        const { bio, skills, website, location, socialLinks, image, resume } = body
+        const { bio, skills, website, location, socialLinks, image, resume, experience } = body
 
         // Note: Location is not in the schema yet, preserving it in frontend state but not saving to DB unless schema updated
         // Updating fields that exist in User schema
@@ -87,6 +87,7 @@ export async function PUT(req: Request) {
                 image,
                 resume,
                 location,
+                experience,
             },
             { new: true }
         )

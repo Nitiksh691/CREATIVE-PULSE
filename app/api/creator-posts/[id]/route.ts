@@ -10,18 +10,26 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         const { id } = await params
         await connectDB()
 
-        const post = await CreatorPost.findById(id)
-            .populate("user", "name skills bio portfolio hourlyRate")
-            .populate("comments.user", "name")
+        // Increment views
+        const post = await CreatorPost.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
+            .populate("user", "name role logo image skills bio portfolio hourlyRate")
+            .populate("comments.user", "name image logo")
+            .lean()
 
         if (!post) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 })
         }
 
-        // Increment views
-        await CreatorPost.findByIdAndUpdate(id, { $inc: { views: 1 } })
+        const formattedPost = {
+            ...post,
+            id: post._id,
+            likes: post.likes ? post.likes.length : 0,
+            comments: post.comments || [],
+            commentsCount: post.comments ? post.comments.length : 0,
+            user: post.user,
+        }
 
-        return NextResponse.json({ post })
+        return NextResponse.json({ post: formattedPost })
     } catch (error) {
         console.error("GET /api/creator-posts/[id] error:", error)
         return NextResponse.json({ error: "Failed to fetch post" }, { status: 500 })

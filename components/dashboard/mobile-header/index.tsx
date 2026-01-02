@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import MonkeyIcon from "@/components/icons/monkey";
 import MobileNotifications from "@/components/dashboard/notifications/mobile-notifications";
 import type { MockData } from "@/types/dashboard";
+import Link from "next/link";
 import BellIcon from "@/components/icons/bell";
 
 interface MobileHeaderProps {
@@ -22,13 +23,13 @@ export function MobileHeader({ mockData }: MobileHeaderProps) {
         <SidebarTrigger />
 
         {/* Center: Monkey Logo + Time */}
-        <div className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="flex items-center gap-2">
             <div className="h-8 w-16 bg-primary rounded flex items-center justify-center">
               <MonkeyIcon className="size-6 text-primary-foreground" />
             </div>
           </div>
-        </div>
+        </Link>
 
         <Sheet>
           {/* Right: Notifications Menu */}

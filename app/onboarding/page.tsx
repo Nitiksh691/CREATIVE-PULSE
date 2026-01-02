@@ -65,11 +65,11 @@ export default function OnboardingPage() {
   // If the user ends up here, we assume they need to onboard or fix their data.
   // We can show a toast but we shouldn't force redirect if the server sent them here.
   useEffect(() => {
-    if (isLoaded && user?.unsafeMetadata?.onboardingCompleted) {
-      toast.info("Update your profile details below")
-      // router.push("/dashboard") // Disabled to fix loop
+    if (isLoaded && user?.publicMetadata?.onboardingCompleted) {
+      toast.info("You are already onboarded")
+      router.push("/dashboard")
     }
-  }, [isLoaded, user])
+  }, [isLoaded, user, router])
 
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role)
@@ -403,7 +403,7 @@ export default function OnboardingPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
-                            <Label className="font-mono uppercase text-xs tracking-wider text-primary">Hourly Rate (USD)</Label>
+                            <Label className="font-mono uppercase text-xs tracking-wider text-primary">Hourly Rate (INR)</Label>
                             <Input
                               type="number"
                               value={freelancerData.hourlyRate}

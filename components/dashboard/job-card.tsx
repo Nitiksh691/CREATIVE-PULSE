@@ -69,7 +69,7 @@ export default function JobCard({ job }: { job: Job }) {
                         <div className="text-left sm:text-right shrink-0">
                             {job.budget && (
                                 <div className="text-sm md:text-base lg:text-lg font-mono font-bold whitespace-nowrap">
-                                    {job.budget.currency} {job.budget.min.toLocaleString()} - {job.budget.max.toLocaleString()}
+                                    {job.budget.currency} {job.budget.min.toLocaleString("en-IN")} - {job.budget.max.toLocaleString("en-IN")}
                                 </div>
                             )}
                             <p className="text-[10px] md:text-xs text-muted-foreground font-mono uppercase truncate">

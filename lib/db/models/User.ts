@@ -24,6 +24,12 @@ export interface IUser extends Document {
     }
     image?: string
     profileViews?: number
+    experience?: {
+        title: string
+        company: string
+        period: string
+        description: string
+    }[]
 
     // Company-specific fields
     companyName?: string
@@ -101,6 +107,12 @@ const userSchema = new Schema<IUser>(
             type: Number,
             default: 0,
         },
+        experience: [{
+            title: String,
+            company: String,
+            period: String,
+            description: String,
+        }],
 
         // Company fields
         companyName: String,

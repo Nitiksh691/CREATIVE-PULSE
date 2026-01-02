@@ -64,11 +64,22 @@ export async function POST(req: Request) {
             name: error.name,
             code: error.code,
             errors: error.errors,
+            stack: error.stack,
         })
+
+        // Handle duplicate key error (E11000)
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern)[0]
+            return NextResponse.json(
+                { error: `This ${field} is already associated with another account.` },
+                { status: 409 }
+            )
+        }
+
         return NextResponse.json(
             {
                 error: "Failed to complete onboarding",
-                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+                details: error.message // Always returning details effectively helps user debug connection issues like IP whitelist
             },
             { status: 500 }
         )

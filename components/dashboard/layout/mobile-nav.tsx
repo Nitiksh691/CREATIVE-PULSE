@@ -10,7 +10,7 @@ export function MobileBottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around bg-background/95 backdrop-blur-xl border-t border-border h-16 px-2 md:hidden safe-area-inset-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around bg-background/95 backdrop-blur-xl border-t border-border h-16 px-2 lg:hidden safe-area-inset-bottom">
       {navItems.map((item) => {
         const isActive = pathname === item.url
         return (

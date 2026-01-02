@@ -5,11 +5,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { useUser } from "@clerk/nextjs" // Keep for user context if needed, though API handles auth
-
 import DashboardPageLayout from "@/components/dashboard/layout"
 import DashboardStat from "@/components/dashboard/stat"
-import DashboardChart from "@/components/dashboard/chart"
 import RebelsRanking from "@/components/dashboard/rebels-ranking"
 import HomeIcon from "@/components/icons/home"
 import BriefcaseIcon from "@/components/icons/briefcase"
@@ -17,7 +14,7 @@ import FileTextIcon from "@/components/icons/file-text"
 import SparklesIcon from "@/components/icons/sparkles"
 import { Button } from "@/components/ui/button"
 
-import mockDataJson from "@/mock.json" // Keep for ranking/chart temporarily
+import mockDataJson from "@/mock.json"
 
 const iconMap = {
   briefcase: BriefcaseIcon,
@@ -47,9 +44,8 @@ interface Application {
 
 export default function DashboardOverview() {
   const [stats, setStats] = useState([
-    { label: "Active Applications", value: "0", description: "Waiting for response", icon: "filetext", tag: "+0%", intent: "neutral", direction: "up" },
-    { label: "Interviews Scheduled", value: "0", description: "Upcoming this week", icon: "briefcase", tag: "+0%", intent: "neutral", direction: "up" },
-    { label: "Profile Impressions", value: "0", description: "In the last 30 days", icon: "sparkles", tag: "+0%", intent: "neutral", direction: "up" },
+    { label: "Active Applications", value: "0", description: "Waiting for response", icon: "filetext", intent: "neutral", direction: "up" },
+    { label: "Interviews Scheduled", value: "0", description: "Upcoming this week", icon: "briefcase", intent: "neutral", direction: "up" },
   ])
   const [recentJobs, setRecentJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(true)
@@ -65,13 +61,10 @@ export default function DashboardOverview() {
 
           const activeApps = applications.filter(a => ["pending", "reviewing"].includes(a.status)).length
           const interviews = applications.filter(a => ["shortlisted", "accepted"].includes(a.status)).length
-          // Simulate dynamic profile views
-          const randomViews = Math.floor(Math.random() * 20) + 10
 
           setStats([
-            { label: "Active Applications", value: activeApps.toString(), description: "Waiting for response", icon: "filetext", tag: "Live", intent: "primary", direction: "up" },
-            { label: "Shortlisted / Interviews", value: interviews.toString(), description: "Action required", icon: "briefcase", tag: "Action", intent: "accent", direction: "up" },
-            { label: "Profile Impressions", value: randomViews.toString(), description: "In the last 30 days", icon: "sparkles", tag: "+5%", intent: "positive", direction: "up" },
+            { label: "Active Applications", value: activeApps.toString(), description: "Waiting for response", icon: "filetext", intent: "primary", direction: "up" },
+            { label: "Shortlisted / Interviews", value: interviews.toString(), description: "Action required", icon: "briefcase", intent: "accent", direction: "up" },
           ])
         }
 
@@ -108,6 +101,36 @@ export default function DashboardOverview() {
         </div>
       ) : (
         <>
+          {/* Welcome / Getting Started Card */}
+          <div className="mb-6 md:mb-8 relative overflow-hidden rounded-xl border-2 border-primary/20 bg-primary/5 p-6 md:p-8">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <SparklesIcon className="size-32 rotate-12" />
+            </div>
+            <div className="relative z-10 max-w-2xl space-y-4">
+              <div className="space-y-2">
+                <h3 className="font-display uppercase text-xl md:text-2xl tracking-wide text-primary">
+                  Welcome to the Resistance, Rebel.
+                </h3>
+                <p className="font-mono text-sm text-muted-foreground leading-relaxed">
+                  Complete your profile to stand out to companies and showcase your skills.
+                  Explore the Creator Discover section to connect with other rebels.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/profile">
+                  <Button className="font-mono text-xs uppercase tracking-wider" size="sm">
+                    Edit Profile
+                  </Button>
+                </Link>
+                <Link href="/creator-discover">
+                  <Button variant="outline" className="font-mono text-xs uppercase tracking-wider bg-transparent" size="sm">
+                    Explore Creators
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
             {stats.map((stat, index) => (
               <DashboardStat
@@ -116,7 +139,7 @@ export default function DashboardOverview() {
                 value={stat.value}
                 description={stat.description}
                 icon={iconMap[stat.icon as keyof typeof iconMap]}
-                tag={stat.tag}
+                tag={undefined}
                 intent={stat.intent as any}
                 direction={stat.direction as any}
               />
@@ -191,10 +214,6 @@ export default function DashboardOverview() {
                 <RebelsRanking rebels={mockDataJson.rebelsRanking} />
               </div>
             </div>
-          </div>
-
-          <div className="mb-6 md:mb-8">
-            <DashboardChart />
           </div>
         </>
       )}

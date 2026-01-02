@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { SignOutButton } from "@clerk/nextjs"
 
 export default function SettingsPage() {
   return (
@@ -190,12 +191,15 @@ export default function SettingsPage() {
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <Label className="font-mono text-sm">Delete Account</Label>
-                <p className="text-xs text-muted-foreground font-mono">Permanently delete your account and all data</p>
+                <Label className="font-mono text-sm">Sign Out</Label>
+                <p className="text-xs text-muted-foreground font-mono">Log out of your account on this device</p>
               </div>
-              <Button variant="destructive" className="font-mono text-xs uppercase">
-                Delete
-              </Button>
+
+              <SignOutButton>
+                <Button variant="outline" className="font-mono text-xs uppercase">
+                  Log Out
+                </Button>
+              </SignOutButton>
             </div>
           </CardContent>
         </Card>

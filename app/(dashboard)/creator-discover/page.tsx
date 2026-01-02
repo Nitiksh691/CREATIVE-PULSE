@@ -259,7 +259,18 @@ export default function CreatorDiscoverPage() {
                   animate={{ opacity: 1, y: 0 }}
                   layout
                   className="bg-card/50 backdrop-blur-sm p-4 md:p-6 rounded-xl border-2 border-white/5 flex flex-col gap-3 md:gap-4 group cursor-pointer hover:border-primary/30 transition-all duration-300"
-                  onClick={() => setSelectedPost(post)}
+                  onClick={async () => {
+                    setSelectedPost(post)
+                    try {
+                      const res = await fetch(`/api/creator-posts/${post.id}`)
+                      if (res.ok) {
+                        const data = await res.json()
+                        setSelectedPost(data.post)
+                      }
+                    } catch (error) {
+                      console.error("Error fetching post details:", error)
+                    }
+                  }}
                 >
                   <div className="flex justify-between items-start gap-3">
                     <div className="flex gap-3 md:gap-4 min-w-0 flex-1">
@@ -303,7 +314,7 @@ export default function CreatorDiscoverPage() {
                           }`}
                       >
                         <Heart className={`size-3.5 md:size-4 ${post.isLiked ? 'fill-current' : ''}`} />
-                        <span>{post.likes}</span>
+                        <span>{post.likes || 0}</span>
                       </button>
                       <button
                         className="flex items-center gap-1 md:gap-1.5 text-[10px] font-mono uppercase text-muted-foreground hover:text-primary transition-colors"
@@ -357,12 +368,6 @@ export default function CreatorDiscoverPage() {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    className="font-display uppercase tracking-widest text-xs h-10 px-6 md:px-8 border-2 bg-transparent w-full sm:w-auto"
-                  >
-                    Follow
-                  </Button>
                 </div>
 
                 <div className="p-4 md:p-6 lg:p-8 bg-background/50 rounded-xl border border-white/5">
@@ -390,11 +395,12 @@ export default function CreatorDiscoverPage() {
                         }`}
                     >
                       <Heart className={`size-5 md:size-6 ${selectedPost.isLiked ? 'fill-current' : ''}`} />
-                      {selectedPost.likes} Likes
+                      {selectedPost.likes || 0} Likes
                     </button>
-                    <button className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
-                      <MessageSquare className="size-5 md:size-6" /> {selectedPost.comments || 0} Comments
-                    </button>
+                    <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-display uppercase tracking-widest text-muted-foreground">
+                      <MessageSquare className="size-5 md:size-6" />
+                      {selectedPost.commentsCount || 0} Comments
+                    </div>
                   </div>
                   <Button
                     variant="ghost"
@@ -407,23 +413,58 @@ export default function CreatorDiscoverPage() {
                 </div>
 
                 {/* Comment Section */}
-                <div className="space-y-4">
-                  <h3 className="font-display uppercase tracking-widest text-sm">Add Comment</h3>
-                  <div className="flex gap-2">
+                <div className="space-y-6">
+                  <h3 className="font-display uppercase tracking-widest text-sm">Comments</h3>
+
+                  {/* Existing Comments List */}
+                  <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    {selectedPost.comments && Array.isArray(selectedPost.comments) && selectedPost.comments.length > 0 ? (
+                      selectedPost.comments.map((comment: any, idx: number) => (
+                        <div key={idx} className="flex gap-3 p-3 bg-white/5 rounded-lg border border-white/5">
+                          <Avatar className="size-8 rounded shrink-0 border border-white/10">
+                            <AvatarImage src={comment.user?.image || comment.user?.logo || "/placeholder.svg"} />
+                            <AvatarFallback className="text-[10px] font-display">
+                              {comment.userName ? comment.userName[0] : (comment.user?.name ? comment.user.name[0] : "?")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0 space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="font-display text-[10px] md:text-xs uppercase tracking-wider text-primary">
+                                {comment.userName || (comment.user?.name || "REBEL")}
+                              </span>
+                              <span className="text-[8px] font-mono text-muted-foreground uppercase">
+                                {new Date(comment.timestamp).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="text-xs font-mono text-muted-foreground leading-relaxed uppercase">
+                              {comment.comment}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-[10px] font-mono text-muted-foreground uppercase text-center py-4 bg-white/5 rounded-lg border border-dashed border-white/10">
+                        No transmissions yet. Be the first to break the silence.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Add Comment Form */}
+                  <div className="space-y-3 pt-4 border-t border-white/5">
                     <Textarea
                       placeholder="Share your thoughts..."
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
-                      className="flex-1 min-h-[80px] bg-background border-border/50 font-mono text-sm"
+                      className="min-h-[80px] bg-background border-border/50 font-mono text-sm uppercase"
                     />
+                    <Button
+                      onClick={() => handleComment(selectedPost.id)}
+                      disabled={isCommenting || !commentText.trim()}
+                      className="w-full font-display uppercase tracking-widest h-11"
+                    >
+                      {isCommenting ? "Broadcasting..." : "Beam Transmission"}
+                    </Button>
                   </div>
-                  <Button
-                    onClick={() => handleComment(selectedPost.id)}
-                    disabled={isCommenting || !commentText.trim()}
-                    className="w-full font-display uppercase tracking-widest"
-                  >
-                    {isCommenting ? "Posting..." : "Post Comment"}
-                  </Button>
                 </div>
               </div>
             )}

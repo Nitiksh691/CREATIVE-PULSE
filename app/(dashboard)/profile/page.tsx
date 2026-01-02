@@ -159,14 +159,16 @@ export default function ProfilePage() {
               {/* Avatar */}
               <div className="relative group">
                 {isEditing ? (
-                  <div className="w-24">
-                    <FileUpload
-                      value={profileData.image || ""}
-                      onUpload={handleImageUpload}
-                      onRemove={handleImageRemove}
-                      folder="logos"
-                      label=""
-                    />
+                  <div className="size-24 rounded-full overflow-hidden border-4 border-background relative">
+                    <div className="absolute inset-0">
+                      <FileUpload
+                        value={profileData.image || ""}
+                        onUpload={handleImageUpload}
+                        onRemove={handleImageRemove}
+                        folder="logos"
+                        label=""
+                      />
+                    </div>
                   </div>
                 ) : (
                   <Avatar className="size-20 md:size-24 border-4 border-background rounded-xl">
@@ -278,27 +280,96 @@ export default function ProfilePage() {
               <CardContent className="space-y-6">
                 {profileData.experience && profileData.experience.length > 0 ? (
                   profileData.experience.map((exp: any, index: number) => (
-                    <div key={exp.id || index}>
+                    <div key={index}>
                       {index > 0 && <Separator className="mb-6" />}
-                      <div className="space-y-2">
-                        <h4 className="font-display uppercase text-base md:text-lg">{exp.title}</h4>
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                          <p className="text-sm text-primary font-mono uppercase">{exp.company}</p>
-                          <p className="text-xs text-muted-foreground font-mono uppercase">{exp.period}</p>
+                      {isEditing ? (
+                        <div className="space-y-3 relative pr-8">
+                          <button
+                            className="absolute top-0 right-0 hover:text-red-500 transition-colors"
+                            onClick={() => {
+                              const newExp = [...profileData.experience];
+                              newExp.splice(index, 1);
+                              setProfileData({ ...profileData, experience: newExp });
+                            }}
+                          >
+                            <X className="size-4" />
+                          </button>
+                          <Input
+                            placeholder="Job Title"
+                            value={exp.title}
+                            onChange={(e) => {
+                              const newExp = [...profileData.experience];
+                              newExp[index] = { ...newExp[index], title: e.target.value };
+                              setProfileData({ ...profileData, experience: newExp });
+                            }}
+                            className="bg-background border-border/50 font-display uppercase tracking-wider !text-base"
+                          />
+                          <div className="grid grid-cols-2 gap-3">
+                            <Input
+                              placeholder="Company"
+                              value={exp.company}
+                              onChange={(e) => {
+                                const newExp = [...profileData.experience];
+                                newExp[index] = { ...newExp[index], company: e.target.value };
+                                setProfileData({ ...profileData, experience: newExp });
+                              }}
+                              className="bg-background border-border/50 font-mono text-xs uppercase"
+                            />
+                            <Input
+                              placeholder="Period (e.g. 2020 - 2022)"
+                              value={exp.period}
+                              onChange={(e) => {
+                                const newExp = [...profileData.experience];
+                                newExp[index] = { ...newExp[index], period: e.target.value };
+                                setProfileData({ ...profileData, experience: newExp });
+                              }}
+                              className="bg-background border-border/50 font-mono text-xs uppercase"
+                            />
+                          </div>
+                          <Textarea
+                            placeholder="Description of responsibilities and achievements..."
+                            value={exp.description}
+                            onChange={(e) => {
+                              const newExp = [...profileData.experience];
+                              newExp[index] = { ...newExp[index], description: e.target.value };
+                              setProfileData({ ...profileData, experience: newExp });
+                            }}
+                            className="bg-background border-border/50 min-h-[80px] font-mono text-sm leading-relaxed"
+                          />
                         </div>
-                        <p className="text-sm text-muted-foreground font-mono leading-relaxed pt-2">{exp.description}</p>
-                      </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <h4 className="font-display uppercase text-base md:text-lg">{exp.title}</h4>
+                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                            <p className="text-sm text-primary font-mono uppercase">{exp.company}</p>
+                            <p className="text-xs text-muted-foreground font-mono uppercase">{exp.period}</p>
+                          </div>
+                          <p className="text-sm text-muted-foreground font-mono leading-relaxed pt-2">{exp.description}</p>
+                        </div>
+                      )}
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-muted-foreground font-mono">No experience listed.</p>
+                  !isEditing && <p className="text-sm text-muted-foreground font-mono">No experience listed.</p>
                 )}
-                {/* {isEditing && (
-                  <Button variant="outline" className="w-full font-mono text-xs uppercase mt-4 bg-transparent">
+
+                {isEditing && (
+                  <Button
+                    variant="outline"
+                    className="w-full font-mono text-xs uppercase mt-4 bg-transparent border-dashed border-primary/20 text-primary hover:bg-primary/5"
+                    onClick={() => {
+                      setProfileData({
+                        ...profileData,
+                        experience: [
+                          ...(profileData.experience || []),
+                          { title: "", company: "", period: "", description: "" }
+                        ]
+                      })
+                    }}
+                  >
                     + Add Experience
                   </Button>
-                )} */}
-                {/* Disabled adding experience for now as backend support isn't there in this iteration */}
+                )}
               </CardContent>
             </Card>
 
@@ -592,12 +663,6 @@ export default function ProfilePage() {
                 >
                   <Share2 className="size-4 mr-2" />
                   Share Profile
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full font-mono text-xs uppercase bg-transparent text-red-500 border-red-500/20 hover:bg-red-500/10"
-                >
-                  Delete Account
                 </Button>
               </CardContent>
             </Card>

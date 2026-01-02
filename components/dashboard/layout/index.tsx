@@ -23,7 +23,6 @@ export default function DashboardPageLayout({ children, header, showBackButton =
     <SidebarInset className="flex flex-col w-full min-h-screen bg-transparent">
       <div className="sticky top-0 lg:top-0 z-10 bg-background/40 backdrop-blur-xl border-b-2 border-white/5">
         <div className="flex items-center gap-3 md:gap-4 px-4 md:px-8 py-3 md:py-6 max-w-7xl mx-auto w-full">
-          <SidebarTrigger className="-ml-1" />
           {showBackButton && (
             <Button
               variant="ghost"
@@ -50,7 +49,7 @@ export default function DashboardPageLayout({ children, header, showBackButton =
         </div>
       </div>
 
-      <div className="flex-1 w-full pb-20 md:pb-0">
+      <div className="flex-1 w-full pb-20 lg:pb-0">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-10">{children}</div>
       </div>
     </SidebarInset>

@@ -24,8 +24,8 @@ export async function GET(req: Request) {
                 avatar: user ? (user.image || user.logo) : null, // Use image if available, else logo
                 content: post.content,
                 skills: post.skills || [],
-                likes: post.likes || 0,
-                comments: post.comments || 0,
+                likes: post.likes ? post.likes.length : 0,
+                comments: post.comments ? post.comments.length : 0,
                 views: post.views || 0,
                 timestamp: new Date(post.createdAt).toLocaleDateString(), // Simplify for now
                 userId: user ? user._id : null
