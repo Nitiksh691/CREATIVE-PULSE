@@ -15,6 +15,8 @@ import User from "@/lib/db/models/User"
 
 const mockData = mockDataJson as MockData
 
+import { PageLights } from "@/components/ui/page-lights"
+
 export default async function DashboardLayout({
   children,
 }: Readonly<{
@@ -38,6 +40,7 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider>
+      <PageLights />
 
 
       {/* Mobile Header - only visible on mobile */}

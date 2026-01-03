@@ -59,14 +59,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
         <div className="min-h-screen bg-[#111111] text-white flex relative overflow-hidden">
             {/* Background Spotlights */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-500/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none" />
 
             {/* Admin Sidebar */}
             <aside className="w-64 border-r border-white/5 bg-black/40 backdrop-blur-xl hidden md:flex flex-col relative z-10">
                 <div className="p-6 border-b border-white/5 flex items-center gap-2">
-                    <Shield className="size-6 text-red-500" />
+                    <Shield className="size-6 text-primary" />
                     <span className="font-display uppercase tracking-widest text-lg">Admin View</span>
                 </div>
 
@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 key={item.href}
                                 href={item.href}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-sm uppercase transition-all duration-300 ${isActive
-                                    ? "bg-red-500/10 text-red-500 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
+                                    ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(3,68,220,0.1)]"
                                     : "hover:bg-white/5 text-muted-foreground hover:text-white border border-transparent"
                                     }`}
                             >
@@ -93,8 +93,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 <div className="p-4 border-t border-white/5">
                     <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/5">
-                        <div className="size-8 rounded-full bg-red-500/20 flex items-center justify-center">
-                            <Shield className="size-4 text-red-500" />
+                        <div className="size-8 rounded-full bg-primary/20 flex items-center justify-center">
+                            <Shield className="size-4 text-primary" />
                         </div>
                         <div className="overflow-hidden">
                             <p className="text-sm font-display truncate">Admin User</p>

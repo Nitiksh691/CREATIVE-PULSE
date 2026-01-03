@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
         fetchStats()
     }, [])
 
-    if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-red-500" /></div>
+    if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary" /></div>
 
     const statCards = [
         { label: "Total Users", value: stats?.totalUsers || 0, icon: Users, color: "text-blue-500" },
@@ -54,7 +54,7 @@ export default function AdminDashboardPage() {
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
                     <h1 className="font-display uppercase text-4xl tracking-tighter text-white">
-                        System <span className="text-red-500 font-bold italic">Overview</span>
+                        System <span className="text-primary font-bold italic">Overview</span>
                     </h1>
                     <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest opacity-60">
                         Platform metrics & real-time status
@@ -71,13 +71,13 @@ export default function AdminDashboardPage() {
                     return (
                         <div key={i} className="group relative">
                             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-                            <div className="p-8 bg-white/5 border border-white/10 rounded-2xl hover:border-red-500/30 transition-all duration-500 relative z-10 backdrop-blur-sm">
+                            <div className="p-8 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/30 transition-all duration-500 relative z-10 backdrop-blur-sm">
                                 <div className="flex justify-between items-start mb-6">
                                     <div className={`p-4 rounded-xl bg-black/40 border border-white/5 group-hover:scale-110 transition-transform duration-500 ${stat.color}`}>
                                         <Icon className="size-6" />
                                     </div>
                                     <div className="h-1 w-12 bg-white/10 rounded-full overflow-hidden">
-                                        <div className="h-full bg-red-500 w-1/3 group-hover:w-full transition-all duration-1000" />
+                                        <div className="h-full bg-primary w-1/3 group-hover:w-full transition-all duration-1000" />
                                     </div>
                                 </div>
                                 <div>

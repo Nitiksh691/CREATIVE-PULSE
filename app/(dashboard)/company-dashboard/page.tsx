@@ -120,7 +120,7 @@ export default function CompanyDashboard() {
         setSpontaneousApps(allApps.filter((a: any) => a.type === "spontaneous"))
       }
 
-      const jobsRes = await fetch("/api/jobs?limit=50")
+      const jobsRes = await fetch("/api/jobs?limit=50&scope=mine&status=all")
       if (jobsRes.ok) {
         const data = await jobsRes.json()
         setJobs(data.jobs || [])

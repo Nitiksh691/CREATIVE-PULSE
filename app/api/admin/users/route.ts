@@ -6,11 +6,20 @@ import User from "@/lib/db/models/User"
 export async function GET(req: Request) {
     try {
         const user = await currentUser()
-        if (!user || user.publicMetadata.role !== "admin") {
+
+        if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         await connectDB()
+
+        // Check if user is admin in DB or Metadata
+        const dbUser = await User.findOne({ clerkId: user.id })
+        const isAdmin = user.publicMetadata.role === "admin" || dbUser?.role === "admin"
+
+        if (!isAdmin) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
 
         const { searchParams } = new URL(req.url)
         const role = searchParams.get("role")

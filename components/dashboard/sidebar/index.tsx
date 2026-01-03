@@ -3,7 +3,7 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { useUser } from "@clerk/nextjs"
+import { useUser, SignOutButton } from "@clerk/nextjs"
 import {
   Sidebar,
   SidebarContent,
@@ -27,6 +27,7 @@ import DotsVerticalIcon from "@/components/icons/dots-vertical"
 import { Bullet } from "@/components/ui/bullet"
 import LockIcon from "@/components/icons/lock"
 import BriefcaseIcon from "@/components/icons/briefcase"
+import { LogOut } from "lucide-react"
 import Image from "next/image"
 import { useIsV0 } from "@/lib/v0-context"
 import { NAVIGATION_CONFIG } from "@/lib/navigation"
@@ -206,6 +207,14 @@ export function DashboardSidebar({ className, ...props }: React.ComponentProps<t
                         <GearIcon className="mr-2 h-4 w-4" />
                         Settings
                       </Link> */}
+                    </div>
+                    <div className="p-2 border-t border-border/50">
+                      <SignOutButton>
+                        <button className="flex items-center w-full px-4 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-sm cursor-pointer transition-colors">
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Log out
+                        </button>
+                      </SignOutButton>
                     </div>
                   </PopoverContent>
                 </Popover>

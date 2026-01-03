@@ -87,7 +87,7 @@ export default function UsersPage() {
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
                     <h1 className="font-display uppercase text-4xl tracking-tighter text-white">
-                        User <span className="text-red-500 font-bold italic">Management</span>
+                        User <span className="text-primary font-bold italic">Management</span>
                     </h1>
                     <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest opacity-60">
                         Control user access and verification level
@@ -97,10 +97,10 @@ export default function UsersPage() {
 
             <div className="flex items-center gap-4">
                 <div className="relative flex-1 max-w-sm group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-red-500 transition-colors" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                     <Input
                         placeholder="SEARCH REBELS..."
-                        className="pl-9 bg-white/5 border-white/10 font-mono text-xs uppercase tracking-widest focus:border-red-500/50 focus:bg-white/10 transition-all rounded-xl h-12"
+                        className="pl-9 bg-white/5 border-white/10 font-mono text-xs uppercase tracking-widest focus:border-primary/50 focus:bg-white/10 transition-all rounded-xl h-12"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -140,7 +140,7 @@ export default function UsersPage() {
                                     </div>
                                 </td>
                                 <td className="p-4">
-                                    <Badge variant="outline" className={`uppercase font-mono text-[10px] ${user.role === 'admin' ? 'border-red-500/50 text-red-500' :
+                                    <Badge variant="outline" className={`uppercase font-mono text-[10px] ${user.role === 'admin' ? 'border-primary/50 text-primary' :
                                         user.role === 'company' ? 'border-orange-500/50 text-orange-500' :
                                             'border-purple-500/50 text-purple-500'
                                         }`}>

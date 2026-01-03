@@ -17,7 +17,40 @@ export async function GET(req: Request) {
 
         await connectDB()
 
+        // Get Current User to enforce visibility scopes
+        const { userId } = await auth()
+        let currentUser = null
+        if (userId) {
+            currentUser = await User.findOne({ clerkId: userId })
+        }
+
         const query: any = { status }
+
+        // Security / Scope Enforcement
+        // If user is a Company, they should ONLY see THEIR OWN jobs when viewing their 'dashboard' list
+        // However, the same API might be used for public job board. 
+        // We distinguish via a 'my_jobs' param OR simply enforce filtering if the user asks for it.
+        // BETTER APPROACH: Check if the request is implicitly asking for "my jobs" context? 
+        // Or simpler: The frontend sends ?company=MY_ID. 
+        // But for security, we should TRUST the session, not the param if it's "my dashboard".
+
+        // Let's support a 'scope=mine' param for dashboard usage
+        const scope = searchParams.get("scope")
+        if (scope === 'mine' && currentUser?.role === 'company') {
+            query.company = currentUser._id
+            // When viewing own jobs, we might want to see closed ones too
+            if (searchParams.get("status") === 'all') {
+                delete query.status
+            }
+        }
+        // Standard public filtering
+        else {
+            // Filter by company param if provided publically
+            const companyId = searchParams.get("company")
+            if (companyId) {
+                query.company = companyId
+            }
+        }
 
         // Text search
         if (search) {
@@ -33,12 +66,6 @@ export async function GET(req: Request) {
         if (skills) {
             const skillsArray = skills.split(",")
             query.skills = { $in: skillsArray }
-        }
-
-        // Filter by company
-        const companyId = searchParams.get("company")
-        if (companyId) {
-            query.company = companyId
         }
 
         const skip = (page - 1) * limit
